@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:local_base/core/helpers/data_base_helper.dart';
 import 'package:local_base/features/home/data/user.dart';
 import 'package:local_base/features/home/ui/widgets/field_widget.dart';
 import 'package:local_base/features/home/ui/widgets/user_card.dart';
@@ -12,6 +13,19 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   List<User> _users = [];
+
+  void _loadUsers() async {
+    List<User> data = await DataBaseHelper.instance.readUsers();
+    setState(() {
+      _users = data;
+    });
+  }
+
+  @override
+  initState() {
+    _loadUsers();
+    super.initState();
+  }
 
   String _selectedGender = "Male";
   final TextEditingController _ageController = TextEditingController();
@@ -100,7 +114,23 @@ class _HomeScreenState extends State<HomeScreen> {
                   shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
                   elevation: 0,
                 ),
-                onPressed: () {},
+                onPressed: () {
+                  if (user == null) {
+                    User userToAdd = User(
+                      id: DateTime.now().toString(),
+                      age: int.tryParse(_ageController.text) ?? 0,
+                      gender: _selectedGender,
+                      lastName: _lastController.text,
+                      firstName: _firstController.text,
+                    );
+                    DataBaseHelper.instance.createUser(userToAdd);
+                  } else {
+                    User userToUpdate = User(id: user.id, age: int.tryParse(_ageController.text) ?? 0, gender: _selectedGender, lastName: _lastController.text, firstName: _firstController.text);
+                    DataBaseHelper.instance.updateUser(userToUpdate);
+                  }
+                  Navigator.pop(context);
+                  _loadUsers();
+                },
                 child: Text(user == null ? "CREATE USER" : "SAVE CHANGES", style: TextStyle(fontWeight: FontWeight.bold, letterSpacing: 1.1)),
               ),
               SizedBox(height: 25),
@@ -147,7 +177,10 @@ class _HomeScreenState extends State<HomeScreen> {
                 return UserCard(
                   user,
                   onUpdate: () => _userSheet(user: user),
-                  onDelete: () {},
+                  onDelete: () {
+                    DataBaseHelper.instance.deleteUser(user.id);
+                    _loadUsers();
+                  },
                 );
               },
               separatorBuilder: (_, _) => SizedBox(height: 12),
