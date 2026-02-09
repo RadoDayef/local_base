@@ -57,15 +57,8 @@ class DataBaseHelper {
 
   /// Update User
   Future<int> updateUser(User user) async {
-    try{
-      print(user.id);
-      Database db = await database;
-      return await db.update("users", user.toMap(), where: "id = ?", whereArgs: [user.id]);
-    }catch(e, s){
-      print(e);
-      print(s);
-      return 0;
-    }
+    Database db = await database;
+    return await db.update("users", user.toMap(), where: "id = ?", whereArgs: [user.id]);
   }
 
   /// Delete User
