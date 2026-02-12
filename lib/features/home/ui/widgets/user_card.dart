@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:local_base/core/constants/extensions/context_extension.dart';
 import 'package:local_base/features/home/data/user.dart';
 
 class UserCard extends StatelessWidget {
@@ -10,7 +11,7 @@ class UserCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ListTile(
-      tileColor: Color(0xFF1A1F24),
+      tileColor: context.homeUserCardColor,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(16),
         side: BorderSide(color: Colors.white10),

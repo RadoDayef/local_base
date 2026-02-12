@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:local_base/core/helpers/data_base_helper.dart';
 import 'package:local_base/features/home/data/user.dart';
@@ -145,10 +146,21 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        centerTitle: true,
-        foregroundColor: Colors.cyanAccent,
-        backgroundColor: Colors.transparent,
-        surfaceTintColor: Colors.transparent,
+        actions: [
+          InkWell(
+            onTap: () {
+              if (context.locale.languageCode == "en") {
+                context.setLocale(Locale("ar"));
+                print(context.locale.languageCode);
+              } else {
+                context.setLocale(Locale("en"));
+                print(context.locale.languageCode);
+              }
+            },
+            child: Icon(Icons.language),
+          ),
+          SizedBox(width: 12),
+        ],
         title: Text("LOCAL BASE", style: TextStyle(fontWeight: FontWeight.w900, letterSpacing: 2.0)),
       ),
       floatingActionButton: FloatingActionButton.extended(
@@ -156,7 +168,7 @@ class _HomeScreenState extends State<HomeScreen> {
         icon: Icon(Icons.add),
         foregroundColor: Colors.black,
         backgroundColor: Colors.cyanAccent,
-        label: Text("Add User", style: TextStyle(fontWeight: FontWeight.bold)),
+        label: Text("addUser".tr(), style: TextStyle(fontWeight: FontWeight.bold)),
       ),
       body: _users.isEmpty
           ? Center(
